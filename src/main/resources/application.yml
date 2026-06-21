@@ -1,0 +1,22 @@
+server:
+  port: ${SERVER_PORT:8095}
+
+spring:
+  application:
+    name: plazoleta-traceability-service
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+
+security:
+  jwt:
+    secret: ${SECURITY_JWT_SECRET:c2VjcmV0by1zdXBlci1sYXJnby1kZS0yNTYtYml0cy1taW5pbW8tcGFyYS1obWFjLXNoYTI1Ng==}
+    expiration-ms: ${SECURITY_JWT_EXPIRATION_MS:86400000}
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+appDescription: "Pragma Plazoleta - Traceability Service"
+appVersion: "1.0.0"

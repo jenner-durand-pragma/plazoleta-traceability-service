@@ -1,0 +1,82 @@
+plugins {
+	id 'org.springframework.boot' version '2.7.3'
+	id 'io.spring.dependency-management' version '1.0.13.RELEASE'
+	id 'java'
+	id 'jacoco'
+}
+
+group = 'com.pragma.plazoleta'
+version = '1.0.0'
+sourceCompatibility = '11'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+ext {
+	springBootVersion = "2.7.3"
+	mapstructVersion = "1.5.2.Final"
+	lombokVersion = "1.18.24"
+	lombokMapstructBindingVersion = "0.2.0"
+	openApiVersion = "1.6.11"
+	jjwtVersion = "0.11.5"
+}
+
+dependencies {
+	// ─── Spring Boot core ───────────────────────────────
+	implementation "org.springframework.boot:spring-boot-starter-validation:${springBootVersion}"
+	implementation "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
+	implementation "org.springframework.boot:spring-boot-starter-security:${springBootVersion}"
+	developmentOnly "org.springframework.boot:spring-boot-devtools:${springBootVersion}"
+
+	// ─── MongoDB ──────────────────────────────────────
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+
+	// ─── JWT ────────────────────────────────────────────
+	implementation "io.jsonwebtoken:jjwt-api:${jjwtVersion}"
+	runtimeOnly  "io.jsonwebtoken:jjwt-impl:${jjwtVersion}"
+	runtimeOnly  "io.jsonwebtoken:jjwt-jackson:${jjwtVersion}"
+
+	// ─── MapStruct + Lombok ─────────────────────────────
+	implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+	compileOnly "org.projectlombok:lombok:${lombokVersion}"
+	annotationProcessor "org.projectlombok:lombok-mapstruct-binding:${lombokMapstructBindingVersion}"
+	annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+	annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
+	// ─── OpenAPI / Swagger ──────────────────────────────
+	implementation "org.springdoc:springdoc-openapi-ui:${openApiVersion}"
+	implementation "org.springdoc:springdoc-openapi-security:${openApiVersion}"
+
+	// ─── Tests ──────────────────────────────────────────
+	testImplementation("org.springframework.boot:spring-boot-starter-test:${springBootVersion}") {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+	testImplementation "org.springframework.security:spring-security-test"
+	testImplementation 'org.mockito:mockito-inline'
+
+	// ─── Embedded MongoDB para tests slice ────────────
+	testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:3.5.4'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+test {
+	finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+	dependsOn test
+	reports {
+		xml.required = true
+		html.required = true
+	}
+}
