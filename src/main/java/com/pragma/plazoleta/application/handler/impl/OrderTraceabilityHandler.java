@@ -16,11 +16,15 @@ public class OrderTraceabilityHandler implements IOrderTraceabilityHandler {
 
     @Override
     public void saveState(OrderStateRequestDto request) {
-        return;
+        var orderState = orderTraceabilityMapper.toOrderState(request);
+
+        orderTraceabilityServicePort.saveState(orderState);
     }
 
     @Override
     public OrderTraceabilityResponseDto findByOrderIdForClient(Long orderId, Long clientId) {
-        return null;
+        var orderStates = orderTraceabilityServicePort.findByOrderIdForClient(orderId, clientId);
+
+        return orderTraceabilityMapper.toResponse(orderStates);
     }
 }

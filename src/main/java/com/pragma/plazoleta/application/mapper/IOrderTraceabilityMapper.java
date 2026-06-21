@@ -8,10 +8,11 @@ import com.pragma.plazoleta.application.dto.response.user.UserInformationRespons
 import com.pragma.plazoleta.domain.model.OrderState;
 import com.pragma.plazoleta.domain.model.UserInformation;
 import org.mapstruct.Mapper;
+import org.mapstruct.ReportingPolicy;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface IOrderTraceabilityMapper {
 
     OrderState toOrderState(OrderStateRequestDto dto);
