@@ -14,11 +14,15 @@ public class OrderReportUseCase implements IOrderReportServicePort {
 
     @Override
     public PagedResult<OrderEfficiency> getOrderEfficiency(Long restaurantId, Integer page, Integer size) {
-        return null;
+        PagedResult.validatePagination(page, size);
+
+        return orderReportPersistencePort.findOrderEfficiencyByRestaurantId(restaurantId, page, size);
     }
 
     @Override
     public PagedResult<EmployeeEfficiency> getEmployeeRanking(Long restaurantId, Integer page, Integer size) {
-        return null;
+        PagedResult.validatePagination(page, size);
+
+        return orderReportPersistencePort.findEmployeeEfficiencyByRestaurantId(restaurantId, page, size);
     }
 }
