@@ -73,7 +73,7 @@ class OrderTraceabilityUseCaseTest {
 
         var orderStates = orderTraceabilityUseCase.findByOrderId(ORDER_ID);
 
-        assertThat(orderStates.size()).isEqualTo(1);
+        assertThat(orderStates).hasSize(1);
         verify(orderTraceabilityPersistencePort).findByOrderId(ORDER_ID);
     }
 
