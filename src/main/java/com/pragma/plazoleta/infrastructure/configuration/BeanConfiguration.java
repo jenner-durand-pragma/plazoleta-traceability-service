@@ -17,8 +17,8 @@ import org.springframework.context.annotation.Configuration;
 @RequiredArgsConstructor
 public class BeanConfiguration {
 
-    private IOrderStateDocumentRepository orderStateDocumentRepository;
-    private IOrderStateDocumentMapper orderStateDocumentMapper;
+    private final IOrderStateDocumentRepository orderStateDocumentRepository;
+    private final IOrderStateDocumentMapper orderStateDocumentMapper;
 
     private final JwtProperties jwtProperties;
 
