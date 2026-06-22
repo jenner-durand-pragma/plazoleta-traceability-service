@@ -5,7 +5,7 @@ import com.pragma.plazoleta.infrastructure.configuration.SecurityConfiguration;
 import com.pragma.plazoleta.infrastructure.configuration.security.CustomAccessDeniedHandler;
 import com.pragma.plazoleta.infrastructure.configuration.security.CustomAuthenticationEntryPoint;
 import com.pragma.plazoleta.infrastructure.configuration.security.CustomAuthenticationFilter;
-import com.pragma.plazoleta.infrastructure.configuration.security.annotation.IsOwnerOrClient;
+import com.pragma.plazoleta.infrastructure.configuration.security.annotation.IsClient;
 import com.pragma.plazoleta.infrastructure.configuration.security.token.ITokenValidationPort;
 import com.pragma.plazoleta.infrastructure.configuration.security.token.dto.AuthenticatedUser;
 import com.pragma.plazoleta.infrastructure.configuration.security.token.exception.InvalidTokenException;
@@ -90,11 +90,11 @@ class SecurityTest {
                 );
     }
 
-    @ParameterizedTest(name = "Should return 200 OK when token is valid and role is {0}")
-    @ValueSource(strings = {"OWNER", "CLIENT"})
-    void shouldReturn200WhenTokenAndRoleAreValid(String role) throws Exception {
-        var validToken = "valid." + role.toLowerCase() + ".token";
-        var allowedUser = new AuthenticatedUser(7L, role.toLowerCase() + "@test.com", role);
+    @Test
+    @DisplayName("Should return 200 OK when token is valid and role is CLIENT")
+    void shouldReturn200WhenTokenAndRoleAreValid() throws Exception {
+        var validToken = "valid.client.token";
+        var allowedUser = new AuthenticatedUser(7L, "client@test.com", "CLIENT");
         when(tokenValidationPort.validate(validToken)).thenReturn(allowedUser);
 
         mockMvc.perform(get("/dummy/protected")
@@ -108,7 +108,7 @@ class SecurityTest {
     @RestController
     public static class DummyController {
 
-        @IsOwnerOrClient
+        @IsClient
         @GetMapping("/dummy/protected")
         public DummyResponse getProtectedData() {
             return new DummyResponse("Access Granted");

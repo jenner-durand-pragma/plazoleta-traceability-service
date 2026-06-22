@@ -1,5 +1,6 @@
 package com.pragma.plazoleta.infrastructure.out.security.jwt;
 
+import com.pragma.plazoleta.domain.constants.RoleConstants;
 import com.pragma.plazoleta.domain.model.UserInformation;
 import com.pragma.plazoleta.infrastructure.configuration.security.token.exception.InvalidTokenException;
 import com.pragma.plazoleta.infrastructure.out.security.jwt.configuration.JwtProperties;
@@ -40,10 +41,7 @@ class JwtAdapterTest {
                 .id(10L)
                 .name("Jenner")
                 .lastName("Durand")
-                .documentNumber("76859685")
-                .phone("+51985768594")
                 .email("jenner.durand@plazoleta.com")
-                .roleName("OWNER")
                 .build();
     }
 
@@ -63,7 +61,7 @@ class JwtAdapterTest {
         var validToken = Jwts.builder()
                 .setSubject(validUser.getEmail())
                 .claim("userId", validUser.getId())
-                .claim("role", validUser.getRoleName())
+                .claim("role", RoleConstants.ROLE_OWNER)
                 .setIssuedAt(now)
                 .setExpiration(expiry)
                 .signWith(signingKey, SignatureAlgorithm.HS256)

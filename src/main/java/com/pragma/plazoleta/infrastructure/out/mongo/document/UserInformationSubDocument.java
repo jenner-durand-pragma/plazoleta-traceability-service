@@ -1,4 +1,4 @@
-package com.pragma.plazoleta.domain.model;
+package com.pragma.plazoleta.infrastructure.out.mongo.document;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserInformation {
+public class UserInformationSubDocument {
 
     private Long id;
     private String name;

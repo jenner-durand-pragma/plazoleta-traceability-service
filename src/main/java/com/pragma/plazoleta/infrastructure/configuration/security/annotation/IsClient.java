@@ -10,6 +10,6 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@PreAuthorize("hasAnyRole('" + RoleConstants.ROLE_OWNER + "', '" + RoleConstants.ROLE_CLIENT + "')")
-public @interface IsOwnerOrClient {
+@PreAuthorize("hasAnyRole('" + RoleConstants.ROLE_CLIENT + "')")
+public @interface IsClient {
 }
