@@ -16,6 +16,6 @@ import java.time.Duration;
 public class EmployeeEfficiency {
 
     private UserInformation employee;
-    private Duration duration;
+    private Double averageMinutes;
     private Long ordersHandled;
 }

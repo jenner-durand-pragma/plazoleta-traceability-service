@@ -255,4 +255,115 @@ class OrderReportMongoAdapterTest {
         assertThat(page1.getItems().get(0).getOrderId()).isEqualTo(2L);
         assertThat(page1.getItems().get(0).getDurationMinutes()).isEqualTo(15.0);
     }
+
+    @Test
+    @DisplayName(
+            "Should calculate average duration, count handled orders and sort ascending (fastest first) " +
+            "in find employee efficiency by restaurant id"
+    )
+    void shouldCalculateAndSortEmployeeEfficiencyRankingFastestFirstInFindEmployeeEfficiencyByRestaurantId() {
+        saveOrderState(
+                101L, RESTAURANT_ID,
+                null, OrderStatus.PENDING,
+                LocalDateTime.of(2026, 6, 21, 10, 0)
+        );
+        saveOrderState(
+                101L, RESTAURANT_ID,
+                OrderStatus.READY, OrderStatus.DELIVERED,
+                LocalDateTime.of(2026, 6, 21, 10, 10)
+        );
+
+        saveOrderState(
+                102L, RESTAURANT_ID,
+                null, OrderStatus.PENDING,
+                LocalDateTime.of(2026, 6, 21, 11, 0)
+        );
+        saveOrderState(
+                102L, RESTAURANT_ID,
+                OrderStatus.READY, OrderStatus.DELIVERED,
+                LocalDateTime.of(2026, 6, 21, 11, 20)
+        );
+
+        var client = UserInformationSubDocument.builder()
+                .id(5L).name("Jenner").lastName("Durand").email("jenner.durand@plazoleta.com").build();
+        var fastEmployee = UserInformationSubDocument.builder()
+                .id(7L).name("Fast").lastName("Chef").email("fast@plazoleta.com").build();
+
+        mongoTemplate.save(OrderStateDocument.builder()
+                        .orderId(103L)
+                        .restaurantId(RESTAURANT_ID)
+                        .previousStatus(null)
+                        .newStatus(OrderStatus.PENDING)
+                        .changedAt(LocalDateTime.of(2026, 6, 21, 12, 0))
+                        .client(client)
+                        .build(),
+                COLLECTION
+        );
+
+        mongoTemplate.save(OrderStateDocument.builder()
+                        .orderId(103L)
+                        .restaurantId(RESTAURANT_ID)
+                        .previousStatus(OrderStatus.READY)
+                        .newStatus(OrderStatus.DELIVERED)
+                        .changedAt(LocalDateTime.of(2026, 6, 21, 12, 5))
+                        .client(client)
+                        .employee(fastEmployee)
+                        .build(),
+                COLLECTION
+        );
+
+        var result = orderReportMongoAdapter.findEmployeeEfficiencyByRestaurantId(RESTAURANT_ID, 0, 10);
+
+        assertThat(result.getItems()).hasSize(2);
+        assertThat(result.getTotalElements()).isEqualTo(2L);
+        assertThat(result.getTotalPages()).isEqualTo(1);
+
+        var rank1 = result.getItems().get(0);
+        assertThat(rank1.getEmployee().getId()).isEqualTo(7L);
+        assertThat(rank1.getEmployee().getName()).isEqualTo("Fast");
+        assertThat(rank1.getAverageMinutes()).isEqualTo(5.0);
+        assertThat(rank1.getOrdersHandled()).isEqualTo(1L);
+
+        var rank2 = result.getItems().get(1);
+        assertThat(rank2.getEmployee().getId()).isEqualTo(6L);
+        assertThat(rank2.getEmployee().getName()).isEqualTo("Employee");
+        assertThat(rank2.getAverageMinutes()).isEqualTo(15.0);
+        assertThat(rank2.getOrdersHandled()).isEqualTo(2L);
+    }
+
+    @Test
+    @DisplayName(
+            "Should ignore unfinished orders and orders from other restaurants " +
+            "in find employee efficiency by restaurant id"
+    )
+    void shouldIgnoreUnfinishedOrdersAndOrdersFromOtherRestaurantsInFindEmployeeEfficiencyByRestaurantId() {
+        var otherRestaurantId = 999L;
+
+        saveOrderState(
+                1L, RESTAURANT_ID,
+                null, OrderStatus.PENDING,
+                LocalDateTime.now()
+        );
+        saveOrderState(
+                1L, RESTAURANT_ID,
+                OrderStatus.PENDING, OrderStatus.IN_PREPARATION,
+                LocalDateTime.now().plusMinutes(5)
+        );
+
+        saveOrderState(
+                2L, otherRestaurantId,
+                null, OrderStatus.PENDING,
+                LocalDateTime.now()
+        );
+        saveOrderState(
+                2L, otherRestaurantId,
+                OrderStatus.READY, OrderStatus.DELIVERED,
+                LocalDateTime.now().plusMinutes(10)
+        );
+
+        var result = orderReportMongoAdapter.findEmployeeEfficiencyByRestaurantId(RESTAURANT_ID, 0, 10);
+
+        assertThat(result.getItems()).isEmpty();
+        assertThat(result.getTotalElements()).isZero();
+    }
 }
