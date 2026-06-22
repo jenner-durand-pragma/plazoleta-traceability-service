@@ -20,7 +20,10 @@ public class OrderReportHandler implements IOrderReportHandler {
             Integer page,
             Integer size
     ) {
-        return null;
+        var orderEfficiencyResponse = orderReportServicePort.getOrderEfficiency(restaurantId, page, size)
+                .mapTo(orderReportMapper::toResponseOrder);
+
+        return PagedResponseDto.from(orderEfficiencyResponse);
     }
 
     @Override
@@ -29,6 +32,9 @@ public class OrderReportHandler implements IOrderReportHandler {
             Integer page,
             Integer size
     ) {
-        return null;
+        var employeeEfficiencyResponse = orderReportServicePort.getEmployeeRanking(restaurantId, page, size)
+                .mapTo(orderReportMapper::toResponseEmployee);
+
+        return PagedResponseDto.from(employeeEfficiencyResponse);
     }
 }
