@@ -1,9 +1,11 @@
 package com.pragma.plazoleta.infrastructure.configuration;
 
 import com.pragma.plazoleta.domain.api.IOrderTraceabilityServicePort;
+import com.pragma.plazoleta.domain.spi.IOrderReportPersistencePort;
 import com.pragma.plazoleta.domain.spi.IOrderTraceabilityPersistencePort;
 import com.pragma.plazoleta.domain.usecase.OrderTraceabilityUseCase;
 import com.pragma.plazoleta.infrastructure.configuration.security.token.ITokenValidationPort;
+import com.pragma.plazoleta.infrastructure.out.mongo.adapter.OrderReportMongoAdapter;
 import com.pragma.plazoleta.infrastructure.out.mongo.adapter.OrderTraceabilityMongoAdapter;
 import com.pragma.plazoleta.infrastructure.out.mongo.mapper.IOrderStateDocumentMapper;
 import com.pragma.plazoleta.infrastructure.out.mongo.repository.IOrderStateDocumentRepository;
@@ -12,6 +14,7 @@ import com.pragma.plazoleta.infrastructure.out.security.jwt.configuration.JwtPro
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.mongodb.core.MongoTemplate;
 
 @Configuration
 @RequiredArgsConstructor
@@ -19,6 +22,8 @@ public class BeanConfiguration {
 
     private final IOrderStateDocumentRepository orderStateDocumentRepository;
     private final IOrderStateDocumentMapper orderStateDocumentMapper;
+
+    private final MongoTemplate mongoTemplate;
 
     private final JwtProperties jwtProperties;
 
@@ -39,6 +44,13 @@ public class BeanConfiguration {
     public IOrderTraceabilityServicePort orderTraceabilityServicePort() {
         return new OrderTraceabilityUseCase(
                 orderTraceabilityPersistencePort()
+        );
+    }
+
+    @Bean
+    public IOrderReportPersistencePort orderReportPersistencePort() {
+        return new OrderReportMongoAdapter(
+                mongoTemplate
         );
     }
 }
