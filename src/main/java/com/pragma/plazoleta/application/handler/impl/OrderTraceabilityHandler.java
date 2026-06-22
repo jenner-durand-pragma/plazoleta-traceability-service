@@ -22,8 +22,8 @@ public class OrderTraceabilityHandler implements IOrderTraceabilityHandler {
     }
 
     @Override
-    public OrderTraceabilityResponseDto findByOrderIdForClient(Long orderId, Long clientId) {
-        var orderStates = orderTraceabilityServicePort.findByOrderIdForClient(orderId, clientId);
+    public OrderTraceabilityResponseDto findByOrderId(Long orderId) {
+        var orderStates = orderTraceabilityServicePort.findByOrderId(orderId);
 
         return orderTraceabilityMapper.toResponse(orderStates);
     }

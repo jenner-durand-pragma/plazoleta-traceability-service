@@ -4,7 +4,6 @@ import com.pragma.plazoleta.application.dto.request.orderstate.OrderStateRequest
 import com.pragma.plazoleta.application.dto.response.orderstate.OrderTraceabilityResponseDto;
 import com.pragma.plazoleta.application.handler.IOrderTraceabilityHandler;
 import com.pragma.plazoleta.infrastructure.configuration.security.annotation.IsClient;
-import com.pragma.plazoleta.infrastructure.configuration.security.token.dto.AuthenticatedUser;
 import com.pragma.plazoleta.infrastructure.exceptionhandler.common.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -16,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -66,12 +64,9 @@ public class OrderTraceabilityRestController {
                             schema = @Schema(implementation = ErrorResponse.class)))
     })
     @GetMapping("/{orderId}")
-    public ResponseEntity<OrderTraceabilityResponseDto> findByOrderId(
-            @PathVariable Long orderId,
-            @AuthenticationPrincipal AuthenticatedUser authenticatedUser
-    ) {
+    public ResponseEntity<OrderTraceabilityResponseDto> findByOrderId(@PathVariable Long orderId) {
         return ResponseEntity.ok(
-                orderTraceabilityHandler.findByOrderIdForClient(orderId, authenticatedUser.getUserId())
+                orderTraceabilityHandler.findByOrderId(orderId)
         );
     }
 }

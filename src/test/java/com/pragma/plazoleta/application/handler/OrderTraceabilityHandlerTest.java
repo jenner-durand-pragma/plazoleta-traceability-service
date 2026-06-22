@@ -56,8 +56,8 @@ class OrderTraceabilityHandlerTest {
     }
 
     @Test
-    @DisplayName("Should retrieve mapped order states for client id in find by order id for client")
-    void shouldReturnMappedOrderStatesInFindByOrderIdForClient() {
+    @DisplayName("Should retrieve mapped order states in find by order id")
+    void shouldReturnMappedOrderStatesInFindByOrderId() {
         var orderId = 42L;
         var clientId = 7L;
 
@@ -69,11 +69,11 @@ class OrderTraceabilityHandlerTest {
 
         var orderStates = List.of(orderState);
 
-        when(orderTraceabilityServicePort.findByOrderIdForClient(orderId, clientId)).thenReturn(orderStates);
+        when(orderTraceabilityServicePort.findByOrderId(orderId)).thenReturn(orderStates);
 
-        var result = orderTraceabilityHandler.findByOrderIdForClient(orderId, clientId);
+        var result = orderTraceabilityHandler.findByOrderId(orderId);
 
-        verify(orderTraceabilityServicePort).findByOrderIdForClient(orderId, clientId);
+        verify(orderTraceabilityServicePort).findByOrderId(orderId);
         verify(orderTraceabilityMapper).toResponse(orderStates);
 
         assertThat(result).isNotNull();

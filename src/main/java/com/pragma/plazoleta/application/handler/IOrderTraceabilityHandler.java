@@ -6,5 +6,5 @@ import com.pragma.plazoleta.application.dto.response.orderstate.OrderTraceabilit
 public interface IOrderTraceabilityHandler {
     void saveState(OrderStateRequestDto request);
 
-    OrderTraceabilityResponseDto findByOrderIdForClient(Long orderId, Long clientId);
+    OrderTraceabilityResponseDto findByOrderId(Long orderId);
 }

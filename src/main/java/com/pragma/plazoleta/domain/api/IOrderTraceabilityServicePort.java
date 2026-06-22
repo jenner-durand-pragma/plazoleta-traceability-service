@@ -7,5 +7,5 @@ import java.util.List;
 public interface IOrderTraceabilityServicePort {
 
     void saveState(OrderState orderState);
-    List<OrderState> findByOrderIdForClient(Long orderId, Long clientId);
+    List<OrderState> findByOrderId(Long orderId);
 }

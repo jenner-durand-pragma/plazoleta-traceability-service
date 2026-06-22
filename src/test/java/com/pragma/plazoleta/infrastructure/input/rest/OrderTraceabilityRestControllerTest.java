@@ -137,15 +137,15 @@ class OrderTraceabilityRestControllerTest {
     @Test
     @DisplayName(
             "Should return 200 OK with traceability when " +
-            "CLIENT requests their own order history in find by order id"
+            "user requests order history in find by order id"
     )
-    void shouldReturn200OkWithTraceabilityWhenClientOwnsTheOrderInFindByOrderId() throws Exception {
+    void shouldReturn200OkWithTraceabilityInFindByOrderId() throws Exception {
         var response = OrderTraceabilityResponseDto.builder()
                 .orderId(42L)
                 .transitions(List.of())
                 .build();
 
-        when(orderTraceabilityHandler.findByOrderIdForClient(42L, 10L))
+        when(orderTraceabilityHandler.findByOrderId(42L))
                 .thenReturn(response);
 
         mockMvc.perform(get("/api/v1/traceability/orders/42")
@@ -157,11 +157,11 @@ class OrderTraceabilityRestControllerTest {
     @Test
     @DisplayName(
             "Should return 404 Not Found when " +
-            "traceability records do not exist for the caller in find by order id"
+            "traceability records do not exist in find by order id"
     )
     void shouldReturn404NotFoundWhenTraceabilityRecordsAreAbsentForTheCallerInFindByOrderId() throws Exception {
         doThrow(new OrderTraceabilityNotFoundException(42L))
-                .when(orderTraceabilityHandler).findByOrderIdForClient(42L, 10L);
+                .when(orderTraceabilityHandler).findByOrderId(42L);
 
         mockMvc.perform(get("/api/v1/traceability/orders/42")
                         .with(authentication(clientAuthentication)))
