@@ -28,9 +28,9 @@ public class OrderReportRestController {
 
     private final IOrderReportHandler orderReportHandler;
 
-    @Operation(summary = "Per-order efficiency for a restaurant (internal)",
+    @Operation(summary = "Order efficiency for a restaurant (internal)",
             description = "Returns paged orders that reached DELIVERED " +
-                    "with the duration from PENDING to DELIVERED in minutes."
+                    "with the duration from PENDING to DELIVERED."
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Paged efficiency report",

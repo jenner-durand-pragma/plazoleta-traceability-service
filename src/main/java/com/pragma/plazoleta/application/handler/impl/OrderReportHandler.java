@@ -7,7 +7,9 @@ import com.pragma.plazoleta.application.handler.IOrderReportHandler;
 import com.pragma.plazoleta.application.mapper.IOrderReportMapper;
 import com.pragma.plazoleta.domain.api.IOrderReportServicePort;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
+@Service
 @RequiredArgsConstructor
 public class OrderReportHandler implements IOrderReportHandler {
 

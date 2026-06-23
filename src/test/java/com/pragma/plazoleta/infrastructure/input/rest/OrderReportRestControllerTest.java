@@ -62,9 +62,8 @@ class OrderReportRestControllerTest {
 
     @BeforeEach
     void setUp() {
-        new ObjectMapper().registerModule(new JavaTimeModule());
-
         var ownerPrincipal = new AuthenticatedUser(2L, "owner@plazoleta.com", "OWNER");
+        
         ownerAuthentication = new UsernamePasswordAuthenticationToken(
                 ownerPrincipal,
                 null,
